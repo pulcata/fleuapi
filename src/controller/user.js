@@ -1,11 +1,11 @@
 'use strict'
 
-const User = require('../model/user');
+import User, { findOne, find } from '../model/user';
 
-exports.getUser = function(req, res){
+export function getUser(req, res){
     var userId = req.params.id;
 
-    return User.findOne({_id: userId}).then((user) => {
+    return findOne({_id: userId}).then((user) => {
         if(!user) res.status(404).send({message: 'User not found'});
         res.status(200).send(user);
     }).catch((err) => {
@@ -14,7 +14,7 @@ exports.getUser = function(req, res){
     })
 }
 
-exports.createUser = function(req, res){
+export function createUser(req, res){
     var name = req.body.name
     var username = req.body.username
     var email = req.body.email
@@ -30,9 +30,9 @@ exports.createUser = function(req, res){
     })
 }
 
-exports.getAllUsers = function(req, res){
+export function getAllUsers(req, res){
 
-    return User.find().then((list) => {
+    return find().then((list) => {
         res.status(200).send(list);
     }).catch((err) => {
         console.error(err);

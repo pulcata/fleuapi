@@ -1,11 +1,11 @@
 'use strict'
 
-const Plant = require('../model/plant');
+import Plant, { findById, find } from '../model/plant';
 
-exports.getPlant = function(req, res){
+export function getPlant(req, res){
     var plantId = req.params.id;
 
-    Plant.findById(plantId, (err, plant) => {
+    findById(plantId, (err, plant) => {
         if(err){
             console.error(err);
             return res.status(500).send({message: 'Bad request'});
@@ -17,7 +17,7 @@ exports.getPlant = function(req, res){
     });
 }
 
-exports.createPlant = function(req, res){
+export function createPlant(req, res){
     var name = req.body.name;
     var userId = req.body.userId; 
     var owners = [req.body.userId]
@@ -34,9 +34,9 @@ exports.createPlant = function(req, res){
     })
 }
 
-exports.getAllPlants = function(req, res){
+export function getAllPlants(req, res){
 
-    Plant.find((err, list) => {
+    find((err, list) => {
         if(err){
             console.error(err);
             return res.status(500).send({message: "Bad request"});
@@ -46,9 +46,9 @@ exports.getAllPlants = function(req, res){
     });
 }
 
-exports.searchPlants = function(req, res){
+export function searchPlants(req, res){
 
-    Plant.find(req.body, (err, list) => {
+    find(req.body, (err, list) => {
         if(err){
             console.error(err)
             return res.status(500).send({message: "Bad request"});

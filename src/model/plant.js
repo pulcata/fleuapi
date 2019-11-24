@@ -1,8 +1,8 @@
 'use strict'
 
-const mongoose =  require('mongoose');
+import { Schema as _Schema, model } from 'mongoose';
 
-const Schema = mongoose.Schema;
+const Schema = _Schema;
 
 const PlantSchema = Schema({
     name: String,
@@ -11,4 +11,4 @@ const PlantSchema = Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Plant', PlantSchema);
+export default model('Plant', PlantSchema);

@@ -1,6 +1,6 @@
-const mongoose =  require('mongoose');
+import { Schema as _Schema, model } from 'mongoose';
 
-const Schema = mongoose.Schema;
+const Schema = _Schema;
 
 const PlaceSchema = Schema({
     name: String,
@@ -10,4 +10,4 @@ const PlaceSchema = Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('Place', PlaceSchema);
+export default model('Place', PlaceSchema);

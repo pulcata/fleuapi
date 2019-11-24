@@ -1,8 +1,8 @@
 'use strict'
 
-const mongoose = require('mongoose');
+import app from '../app'
 
-const app = require('./app');
+import mongoose from'mongoose'
 
 const port = 3800;
 
