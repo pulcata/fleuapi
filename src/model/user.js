@@ -1,16 +1,17 @@
 'use strict'
 
-const mongoose =  require('mongoose');
+import { Schema as _Schema, model } from 'mongoose';
+import Place from '../model/place';
 
-const Schema = mongoose.Schema;
+const Schema = _Schema;
 
 const UserSchema = Schema({
     name: String,
     username: String,
     email: String,
-    password: String,
-    place: { type: Object, default: {} },
+    picture: { type: String, default: "" },
+    places: [{ type: Schema.Types.ObjectId, ref: 'Place'}],
     createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('User', UserSchema);
+export default model('User', UserSchema);

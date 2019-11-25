@@ -1,6 +1,8 @@
 'use strict'
 
-import Place, { find, findOne } from '../model/place';
+import Place, { find, findOne } from '../model/place'
+import User from '../model/user'
+import admin from '../middlewares/firebase-service'
 
 export async function getPlaces(req, res) {
     
@@ -10,19 +12,32 @@ export async function getPlaces(req, res) {
     }
     catch (err) {
         console.error(err);
-        res.status(500).send({ message: 'Bad request' });
+        res.status(400).send({ message: 'Bad request' });
     }
 }
 
-export function savePlace(req, res) {
+export async function savePlace(req, res) {
 
-    const newPlace = Place({ name: req.body.name, userId: req.body.userId, lat: req.body.lat, lon: req.body.lon })
-    return newPlace.save().then((user) => {
-        res.status(201).send()
-    }).catch((err) => {
+    const token = req.headers.authorization
+
+    try{
+        const userInfo = await admin.auth().verifyIdToken(token)
+
+        const user = await User.findOne({email : userInfo.email}).populate('places')
+        const newPlace = new Place({ nickname : req.body.nickname, lat: req.body.lat, lon: req.body.lon })
+        return newPlace.save().then((place) => {
+            user.places.push(place)
+            return user.save()
+        }).then((newUser) =>{ 
+            res.status(201).send(newUser)
+        }).catch((err) =>{
+            console.error(err)
+            res.status(400).send({message: 'Error saving the place'})
+        })
+    }catch(err){
         console.error(err)
-        res.status(500).send({message: 'Bad request'})
-    })
+        res.status(400).send({message: 'Error saving the place'})
+    }   
 }
 
 export function getPlaceByUserId(req,res){
@@ -34,7 +49,7 @@ export function getPlaceByUserId(req,res){
         res.status(200).send(user);
     }).catch((err) => {
         console.error(err)
-        res.status(500).send({message: 'Bad request'});
+        res.status(400).send({message: 'Bad request'});
     })
 
 }
@@ -48,7 +63,7 @@ export function getPlaceById(req,res){
         res.status(200).send(user);
     }).catch((err) => {
         console.error(err)
-        res.status(500).send({message: 'Bad request'});
+        res.status(400).send({message: 'Bad request'});
     })
 
 }

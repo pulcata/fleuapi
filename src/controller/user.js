@@ -1,20 +1,23 @@
 'use strict'
 
-import User, { findOne, find } from '../model/user';
+import User from '../model/user';
+import admin from '../middlewares/firebase-service'
 
-export function getUser(req, res){
-    var userId = req.params.id;
+export async function getUserInfo(req, res){
+    const idToken = req.headers.authorization
 
-    return findOne({_id: userId}).then((user) => {
-        if(!user) res.status(404).send({message: 'User not found'});
-        res.status(200).send(user);
-    }).catch((err) => {
+    admin.auth().verifyIdToken(idToken).then((userInfo) => {
+        return User.findOne({ email: userInfo.email} ).populate('places')    
+    }).then((user) => {
+        res.status(200).send(user)
+    })
+    .catch((err) =>{
         console.error(err)
-        res.status(500).send({message: 'Bad request'});
+        res.status(400).send({ message: 'Bad request' });
     })
 }
 
-export function createUser(req, res){
+export async function createUser(req, res){
     var name = req.body.name
     var username = req.body.username
     var email = req.body.email
@@ -22,20 +25,46 @@ export function createUser(req, res){
 
     var newUser = new User({ name: name, username: username, email: email, password: password });
 
-    return newUser.save().then((user) => {
-        res.status(201).send()
-    }).catch((err) => {
-        console.error(err)
-        res.status(500).send({message: 'Bad request'})
-    })
+    try {
+        const user = await newUser.save();
+        res.status(201).send(newUser);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).send({ message: 'Bad request' });
+    }
 }
 
-export function getAllUsers(req, res){
+export async function getAllUsers(req, res){
 
-    return find().then((list) => {
+    try {
+        const list = await User.find();
         res.status(200).send(list);
-    }).catch((err) => {
+    }
+    catch (err) {
         console.error(err);
-        res.status(500).send({message: 'Bad request'});
+        res.status(500).send({ message: 'Bad request' });
+    }
+}
+
+export async function register(req, res){
+    const idToken = req.headers.authorization
+
+    admin.auth().verifyIdToken(idToken).then((userInfo)=>{
+        var newUser = new User({ name: userInfo.name, username: createRandomUsername(userInfo.name), email: userInfo.email, picture: userInfo.picture })
+        return newUser.save()
+    }).then((newUser) =>{
+        res.status(201).send(newUser)
+    }).catch((err) =>{
+        console.error(err)
+        res.status(400).send({ message: "Bad request"})
     })
-}   
+
+}
+
+function createRandomUsername(name){
+    var shortName = name.split(' ')[0].toLowerCase()
+    var number = Math.floor((Math.random() * 10000) + 1)
+
+    return shortName + number
+}

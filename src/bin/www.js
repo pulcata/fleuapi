@@ -4,7 +4,7 @@ import app from '../app'
 
 import mongoose from'mongoose'
 
-const port = 3800;
+const port = process.env.PORT || 3800
 
 mongoose.Promise = global.Promise;
 console.log('Connecting...')
@@ -13,7 +13,7 @@ mongoose.connect('mongodb://savirdev:grtXFcc2swMr2Q6h@ds121483.mlab.com:21483/re
     .then(() => {
         console.log('Connected to database')
         app.listen(port, () => {
-            console.log('Server running on http://localhost:3800/api/')
+            console.log('Server running...')
         })
     })
     .catch(err => console.error(err));

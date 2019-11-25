@@ -2,7 +2,7 @@
 
 import admin from '../middlewares/firebase-service'
 
-const getAuthToken = (req, res, next) => {
+export const getAuthToken = (req, res, next) => {
     if (
       req.headers.authorization &&
       req.headers.authorization.split(' ')[0] === 'Bearer'
@@ -12,22 +12,21 @@ const getAuthToken = (req, res, next) => {
       req.authToken = null;
     }
     next();
-  };
+  }
   
   
-  export const checkIfAuthenticated = (req, res, next) => {
-   getAuthToken(req, res, async () => {
-      try {
-        const { authToken } = req;
-        const userInfo = await admin
-          .auth()
-          .verifyIdToken(authToken);
-        req.authId = userInfo.uid;
-        return next();
-      } catch (e) {
-        return res
-          .status(401)
-          .send({ error: 'You are not authorized to make this request' });
+  export async function checkIfAuthenticated(req, res, next){
+
+    const idToken = req.headers.authorization
+    try{
+      const decodedToken = await admin.auth().verifyIdToken(idToken)
+
+      if(decodedToken){
+        return next()
+      }else{
+        res.status(401).send({ message: "You are not authorized"})
       }
-    })
+    }catch{
+      res.status(401).send({ message: "You are not authorized"})
+    }
   }
