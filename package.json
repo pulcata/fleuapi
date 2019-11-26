@@ -5,13 +5,11 @@
   "main": "/bin/www.js",
   "scripts": {
     "start": "npm run prod",
-    "server": "babel-node ./src/bin/www",
-    "server:prod": "babel-node ./src/bin/www",
+    "server": "node ./bin/www",
     "dev": "NODE_ENV=development npm-run-all server",
     "test": "echo \\\"Error: no test specified\\\" && exit 1",
     "clean": "rimraf dist",
-    "build": "babel ./src --out-dir dist",
-    "prod": "NODE_ENV=production npm-run-all clean build server:prod",
+    "prod": "NODE_ENV=production npm-run-all clean build server",
     "watch": "nodemon"
   },
   "keywords": [
