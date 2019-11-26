@@ -9,7 +9,7 @@
     "dev": "NODE_ENV=development npm-run-all server",
     "test": "echo \\\"Error: no test specified\\\" && exit 1",
     "clean": "rimraf dist",
-    "prod": "NODE_ENV=production npm-run-all clean server",
+    "prod": "NODE_ENV=production npm install npm-run-all clean server",
     "watch": "nodemon"
   },
   "keywords": [
