@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run prod",
     "server": "babel-node ./src/bin/www",
-    "server:prod": "node ./dist/bin/www",
+    "server:prod": "babel-node ./src/bin/www",
     "dev": "NODE_ENV=development npm-run-all server",
     "test": "echo \\\"Error: no test specified\\\" && exit 1",
     "clean": "rimraf dist",

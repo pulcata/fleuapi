@@ -7,7 +7,10 @@
     "shell": "firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "logs": "firebase functions:log",
+    "build": "babel app --out-dir functions --copy-files --ignore functions/node_modules",
+    "prebuild": "node node_modules/rimraf/bin functions",
+    "postbuild": "cd functions && npm i -s"
   },
   "engines": {
     "node": "8"
