@@ -5,11 +5,11 @@
   "main": "/bin/www.js",
   "scripts": {
     "start": "npm run prod",
-    "server": "node src/bin/www.js",
-    "dev": "NODE_ENV=development npm-run-all server",
+    "web": "node src/bin/www.js",
+    "dev": "NODE_ENV=development npm-run-all web",
     "test": "echo \\\"Error: no test specified\\\" && exit 1",
     "npminstall": "npm install",
-    "prod": "NODE_ENV=production npm-run-all npminstall server",
+    "prod": "NODE_ENV=production npm-run-all npminstall web",
     "watch": "nodemon"
   },
   "keywords": [
