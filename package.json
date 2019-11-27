@@ -5,7 +5,7 @@
   "main": "/bin/www.js",
   "scripts": {
     "start": "npm run prod",
-    "server": "pm2 start bin/www.js",
+    "server": "node src/bin/www.js",
     "dev": "NODE_ENV=development npm-run-all server",
     "test": "echo \\\"Error: no test specified\\\" && exit 1",
     "install": "npm install",
