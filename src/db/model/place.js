@@ -6,7 +6,7 @@ const PlaceSchema = Schema.Schema({
     nickname: String,
     lat: { type: Number, default: 0.0},
     lon: { type: Number, default: 0.0},
-    active : { type : Boolean, default: true },
+    plants: [{ type: Schema.Types.ObjectId, ref: 'Plant'}],
     createdAt: { type: Date, default: Date.now }
 });
 

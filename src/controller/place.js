@@ -24,7 +24,7 @@ exports.savePlace = async function(req, res) {
         const userInfo = await admin.auth().verifyIdToken(token)
 
         const user = await User.findOne({email : userInfo.email}).populate('places')
-        const newPlace = new Place({ nickname : req.body.nickname, lat: req.body.lat, lon: req.body.lon })
+        const newPlace = new Place({ nickname : req.body.nickname, lat: req.body.lat, lon: req.body.lon, active: req.body.active })
         return newPlace.save().then((place) => {
             user.places.push(place)
             return user.save()
@@ -46,8 +46,8 @@ exports.getPlacesByUserId = async function(req,res){
 
     try{
         const userInfo = await admin.auth().verifyIdToken(token)
-        User.find({email : userInfo.email }).populate({path: 'places', match: {active : true}}).then((user) =>{
-            res.status(200).send(user.places)
+        User.findOne({email : userInfo.email }, 'places').populate('places').then((user) =>{
+            res.status(200).send(user)
         }).catch((err) =>{
             console.error(err)
             res.status(400).send({message: 'Bad request'});
@@ -76,13 +76,8 @@ exports.deletePlace = function(req, res){
     var id = req.params.id;
 
     try{
-        return Place.findOne({_id: id}).then((place) => {
+        return Place.findOneAndDelete({_id: id}).then((place) => {
             if(!place) res.status(404).send({message: 'Place not found'});
-
-            place.active = false
-
-            return place.save()
-        }).then((place) =>{
             res.status(200).send()
         }).catch((err) => {
             console.error(err)
