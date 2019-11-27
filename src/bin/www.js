@@ -4,7 +4,7 @@ const app = require('../app')
 
 const mongoose =  require('mongoose')
 
-const port = process.env.PORT || 3800
+const port = process.env.PORT || 3700
 
 mongoose.Promise = global.Promise;
 console.log('Connecting...')
